@@ -15,7 +15,7 @@ public class UserDAO {
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
-            ps.setTimestamp(3, user.getTimestamp());
+            ps.setTimestamp(3, user.getCreationTime());
             ps.executeUpdate();
 
             ps.close();

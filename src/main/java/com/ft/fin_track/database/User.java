@@ -7,14 +7,14 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private final Timestamp timestamp;
+    private final Timestamp creation_time;
 
     public User(int userID, String username, String email, String password) {
         this.userID = userID;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.timestamp = new Timestamp(System.currentTimeMillis());
+        this.creation_time = new Timestamp(System.currentTimeMillis());
     }
 
     public int getUserID() {
@@ -49,8 +49,8 @@ public class User {
         this.password = password;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public Timestamp getCreationTime() {
+        return creation_time;
     }
 
 }

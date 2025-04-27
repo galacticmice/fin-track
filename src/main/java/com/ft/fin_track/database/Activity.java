@@ -1,20 +1,23 @@
 package com.ft.fin_track.database;
 
+import java.sql.Timestamp;
+
 // Transaction activity --> named Activity to avoid confusion between SQL transctions
 public class Activity {
-    private int activity_id;
-    private String date_time;
+    private Integer activity_id; // primary key, auto increment: null-->let db handle
+    private final Timestamp entry_time;
     private int user_id;
     private int category_id;
+    private char type; // 'W' for withdraw, 'D' for deposit
     private double amount;
     private String description;
     private int recur_days;
 
-    public Activity(int activity_id, String date_time, int user_id, int category_id, double amount, String description, int recur_days) {
-        this.activity_id = activity_id;
-        this.date_time = date_time;
+    public Activity(int user_id, int category_id, char type, double amount, String description, int recur_days) {
+        this.entry_time = new Timestamp(System.currentTimeMillis());
         this.user_id = user_id;
         this.category_id = category_id;
+        this.type = type;
         this.amount = amount;
         this.description = description;
         this.recur_days = recur_days;
@@ -28,12 +31,8 @@ public class Activity {
         this.activity_id = activity_id;
     }
 
-    public String getDate_time() {
-        return date_time;
-    }
-
-    public void setDate_time(String date_time) {
-        this.date_time = date_time;
+    public Timestamp getEntryTime() {
+        return entry_time;
     }
 
     public int getUser_id() {
@@ -50,6 +49,14 @@ public class Activity {
 
     public void setCategory_id(int category_id) {
         this.category_id = category_id;
+    }
+
+    public char getType() {
+        return type;
+    }
+
+    public void setType(char type) {
+        this.type = type;
     }
 
     public double getAmount() {
