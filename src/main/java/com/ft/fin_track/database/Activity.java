@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 public class Activity {
     private Integer activity_id; // primary key, auto increment: null-->let db handle
     private final Timestamp entry_time;
-    private int user_id;
+    private final int user_id;
     private int category_id;
     private char type; // 'W' for withdraw, 'D' for deposit
     private double amount;
@@ -44,10 +44,6 @@ public class Activity {
 
     public int getUser_id() {
         return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
     }
 
     public int getCategory_id() {

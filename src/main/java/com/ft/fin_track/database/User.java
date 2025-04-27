@@ -3,7 +3,7 @@ package com.ft.fin_track.database;
 import java.sql.Timestamp;
 
 public class User {
-    private Integer userID; // primary key, auto-increment: null-->let db handle
+    private final Integer userID; // primary key, auto-increment: null-->let db handle
     private String username;
     private String email;
     private String password;
@@ -23,10 +23,6 @@ public class User {
 
     public int getUserID() {
         return userID;
-    }
-
-    public void setUserID(int userID) {
-        this.userID = userID;
     }
 
     public String getUsername() {
