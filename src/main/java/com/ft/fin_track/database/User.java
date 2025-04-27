@@ -1,18 +1,20 @@
 package com.ft.fin_track.database;
 
+import java.sql.Timestamp;
+
 public class User {
     private int userID;
     private String username;
     private String email;
     private String password;
-    private String dateCreated;
+    private final Timestamp timestamp;
 
-    public User(int userID, String username, String email, String password, String dateCreated) {
+    public User(int userID, String username, String email, String password) {
         this.userID = userID;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.dateCreated = dateCreated;
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     public int getUserID() {
@@ -47,11 +49,8 @@ public class User {
         this.password = password;
     }
 
-    public String getDateCreated() {
-        return dateCreated;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
 }

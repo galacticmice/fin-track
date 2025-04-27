@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectDB {
-    public static Connection createConnection() {
+    public static Connection getConnection() {
         Connection conn = null;
         String url = System.getenv("POSTGRES_URL");
         String user = System.getenv("POSTGRES_USER");
