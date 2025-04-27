@@ -13,14 +13,21 @@ public class Activity {
     private String description;
     private int recur_days;
 
-    public Activity(int user_id, int category_id, char type, double amount, String description, int recur_days) {
-        this.entry_time = new Timestamp(System.currentTimeMillis());
+    // blanket constructor for retrieving activity
+    public Activity(Integer activity_id, Timestamp entry_time, int user_id, int category_id, char type, double amount, String description, int recur_days) {
+        this.activity_id = activity_id;
+        this.entry_time = entry_time;
         this.user_id = user_id;
         this.category_id = category_id;
         this.type = type;
         this.amount = amount;
         this.description = description;
         this.recur_days = recur_days;
+    }
+
+    // constructor for adding activity (no activity_id, entry_time --> not user modifiable values)
+    public Activity(int user_id, int category_id, char type, double amount, String description, int recur_days) {
+        this(null, new Timestamp(System.currentTimeMillis()), user_id, category_id, type, amount, description, recur_days);
     }
 
     public int getActivity_id() {

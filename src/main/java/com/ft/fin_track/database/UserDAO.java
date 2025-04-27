@@ -11,7 +11,7 @@ public class UserDAO {
      */
     public static boolean addUser(User user) {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "INSERT INTO Users (username, password, date_created) VALUES (?, ? ,?)";
+            String query = "INSERT INTO Users (username, password, creation_time) VALUES (?, ? ,?)";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());

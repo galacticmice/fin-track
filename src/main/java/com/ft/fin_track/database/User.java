@@ -3,18 +3,22 @@ package com.ft.fin_track.database;
 import java.sql.Timestamp;
 
 public class User {
-    private int userID;
+    private Integer userID; // primary key, auto-increment: null-->let db handle
     private String username;
     private String email;
     private String password;
-    private final Timestamp creation_time;
+    private final Timestamp creation_time; // creation time, not user modifiable
 
-    public User(int userID, String username, String email, String password) {
+    public User(Integer userID, String username, String email, String password, Timestamp creation_time) {
         this.userID = userID;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.creation_time = new Timestamp(System.currentTimeMillis());
+        this.creation_time = creation_time;
+    }
+
+    public User(String username, String email, String password) {
+        this(null, username, email, password, new Timestamp(System.currentTimeMillis()));
     }
 
     public int getUserID() {
