@@ -27,6 +27,10 @@ public class History {
         return user_id;
     }
 
+    public Date getMonth_year() {
+        return month_year;
+    }
+
     public double getBudget() {
         return budget;
     }
