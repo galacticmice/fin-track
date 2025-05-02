@@ -1,8 +1,6 @@
 package com.ft.fin_track.database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class HistoryDAO {
     public static boolean insertOrUpdateHistory(History history) {
@@ -28,4 +26,33 @@ public class HistoryDAO {
         }
     }
 
+    public static Double getLatestBudget(int user_id, Date referenceDate) {
+        try (Connection conn = ConnectDB.getConnection()) {
+            String query = "SELECT budget FROM History " +
+                    "WHERE user_id = ? AND month_year <= ? " +
+                    "ORDER BY month_year DESC " +
+                    "LIMIT 1";
+
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, user_id);
+            ps.setDate(2, referenceDate);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                double budget = rs.getDouble("budget");
+                rs.close();
+                ps.close();
+                conn.close();
+                return budget;
+            } else {
+                rs.close();
+                ps.close();
+                conn.close();
+                return null; // No budget found in history, shouldn't get to this point
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving latest budget: " + e.getMessage());
+            return null;
+        }
+    }
 }

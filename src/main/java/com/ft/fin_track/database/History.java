@@ -12,6 +12,7 @@ public class History {
     /// 1. user changes data in April(this month), we change budget data for April
     /// 2. come May --> April data cannot be modified anymore. It exists only in history
     /// 3. so if user queries last month's data, we can show April stats
+    /// 4. on the first of every month, run script to create
     public History(int user_id, Date month_year, double budget) {
         this.user_id = user_id;
         // Convert java.sql.Date to java.time.LocalDate
