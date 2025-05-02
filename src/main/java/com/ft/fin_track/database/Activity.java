@@ -8,26 +8,26 @@ public class Activity {
     private final Timestamp entry_time;
     private final int user_id;
     private int category_id;
-    private char type; // 'W' for withdraw, 'D' for deposit
+    private char activity_type; // 'W' for withdraw, 'D' for deposit
     private double amount;
     private String description;
     private int recur_days;
 
     // blanket constructor for retrieving activity
-    public Activity(Integer activity_id, Timestamp entry_time, int user_id, int category_id, char type, double amount, String description, int recur_days) {
+    public Activity(Integer activity_id, Timestamp entry_time, int user_id, int category_id, char activity_type, double amount, String description, int recur_days) {
         this.activity_id = activity_id;
         this.entry_time = entry_time;
         this.user_id = user_id;
         this.category_id = category_id;
-        this.type = type;
+        this.activity_type = activity_type;
         this.amount = amount;
         this.description = description;
         this.recur_days = recur_days;
     }
 
     // constructor for adding activity (no activity_id, entry_time --> not user modifiable values)
-    public Activity(int user_id, int category_id, char type, double amount, String description, int recur_days) {
-        this(null, new Timestamp(System.currentTimeMillis()), user_id, category_id, type, amount, description, recur_days);
+    public Activity(int user_id, int category_id, char activity_type, double amount, String description, int recur_days) {
+        this(null, new Timestamp(System.currentTimeMillis()), user_id, category_id, activity_type, amount, description, recur_days);
     }
 
     public int getActivity_id() {
@@ -54,12 +54,12 @@ public class Activity {
         this.category_id = category_id;
     }
 
-    public char getType() {
-        return type;
+    public char getActivity_type() {
+        return activity_type;
     }
 
-    public void setType(char type) {
-        this.type = type;
+    public void setActivity_type(char activity_type) {
+        this.activity_type = activity_type;
     }
 
     public double getAmount() {

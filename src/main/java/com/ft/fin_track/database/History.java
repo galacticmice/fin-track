@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class History {
     private final int user_id;
-    private Date month_year;
+    private final Date month_year;
     private double budget;
 
     /// stores user's set budget for that month

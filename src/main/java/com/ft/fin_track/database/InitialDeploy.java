@@ -24,6 +24,7 @@ public class InitialDeploy {
             String query = "CREATE TABLE Users (" +
                     "user_id SERIAL PRIMARY KEY, " +
                     "username VARCHAR(20) NOT NULL, " +
+                    "email VARCHAR(255) NOT NULL UNIQUE, " +
                     "password VARCHAR(128) NOT NULL, " +
                     "creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                     ")";
@@ -47,11 +48,15 @@ public class InitialDeploy {
         try (Connection conn = ConnectDB.getConnection()) {
             String query = "CREATE TABLE Activity (" +
                     "activity_id SERIAL PRIMARY KEY, " +
+                    "entry_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                     "user_id INT NOT NULL, " +
-                    "activity_type CHAR(1) NOT NULL, " +
+                    "category_id INT NOT NULL, " +
+                    "activity_type CHAR(1) NOT NULL CHECK (activity_type IN ('D', 'W')), " +
                     "amount DECIMAL(10, 2) NOT NULL, " +
-                    "creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-                    "FOREIGN KEY (user_id) REFERENCES Users(user_id)" +
+                    "description VARCHAR(255), " +
+                    "recur_days INT DEFAULT 0, " +
+                    "FOREIGN KEY (user_id) REFERENCES Users(user_id)," +
+                    "FOREIGN KEY (category_id) REFERENCES Category(category_id)" +
                     ")";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.executeUpdate();
@@ -71,7 +76,13 @@ public class InitialDeploy {
      */
     public static boolean createHistoryTable() {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "";
+            String query = "CREATE TABLE History (" +
+                    "user_id INT NOT NULL, " +
+                    "month_year DATE NOT NULL, " +
+                    "budget DECIMAL(10, 2) NOT NULL, " +
+                    "PRIMARY KEY (user_id, month_year), " +
+                    "FOREIGN KEY (user_id) REFERENCES Users(user_id)" +
+                    ")";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.executeUpdate();
 
