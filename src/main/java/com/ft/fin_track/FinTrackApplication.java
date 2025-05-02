@@ -11,3 +11,6 @@ public class FinTrackApplication {
 	}
 
 }
+
+/// run startFresh() to reset database
+/// create

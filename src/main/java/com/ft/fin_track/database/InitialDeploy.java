@@ -2,7 +2,18 @@ package com.ft.fin_track.database;
 
 import java.sql.*;
 
+/// used only for initial deployment of server
+/// DO NOT USE IN PRODUCTION
 public class InitialDeploy {
+
+    public static void startFresh() {
+        deleteUserTable();
+        deleteActivityTable();
+        deleteHistoryTable();
+        createUserTable();
+        createActivityTable();
+        createHistoryTable();
+    }
 
     /**
      * create user table

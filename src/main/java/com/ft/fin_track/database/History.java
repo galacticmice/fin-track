@@ -1,44 +1,30 @@
 package com.ft.fin_track.database;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class History {
     private final int user_id;
-    private int year;
-    private int month;
+    private Date month_year;
     private double budget;
 
-    // deciding between storing calculated data here,
-    // or calculate on-demand with query
-
-
-    public History(int user_id, int year, int month, double budget) {
+    /// stores user's set budget for that month
+    /// 1. user changes data in April(this month), we change budget data for April
+    /// 2. come May --> April data cannot be modified anymore. It exists only in history
+    /// 3. so if user queries last month's data, we can show April stats
+    public History(int user_id, Date month_year, double budget) {
         this.user_id = user_id;
-        this.year = year;
-        this.month = month;
+        // Convert java.sql.Date to java.time.LocalDate
+        LocalDate localDate = month_year.toLocalDate();
+        // Set the day to the first of the month
+        LocalDate firstDayOfMonth = localDate.withDayOfMonth(1);
+        // Convert back to java.sql.Date and assign
+        this.month_year = Date.valueOf(firstDayOfMonth);
         this.budget = budget;
     }
 
-
-
     public int getUser_id() {
         return user_id;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
     }
 
     public double getBudget() {
