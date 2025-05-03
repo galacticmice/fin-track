@@ -3,6 +3,11 @@ package com.ft.fin_track.database;
 import java.sql.*;
 
 public class HistoryDAO {
+    /**
+     * attempt to insert budget for current month. if entry for current month already exists, update it.
+     * @param history object containing user_id, month_year, budget
+     * @return true if successful, false otherwise
+     */
     public static boolean insertOrUpdateHistory(History history) {
         try (Connection conn = ConnectDB.getConnection()) {
             String query = "INSERT INTO History (user_id, month_year, budget) " +
@@ -15,17 +20,24 @@ public class HistoryDAO {
             ps.setDouble(3, history.getBudget());
             ps.setDouble(4, history.getBudget());
 
-            int rowsAffected = ps.executeUpdate();
+            ps.executeUpdate();
             ps.close();
             conn.close();
 
-            return rowsAffected > 0;
+            return true;
         } catch (SQLException e) {
             System.out.println("Error inserting/updating history: " + e.getMessage());
             return false;
         }
     }
 
+    /**
+     * Retrieves the latest budget for a user up to a specified reference date.
+     *
+     * @param user_id the ID of the user for whom the budget is being retrieved
+     * @param referenceDate the date up to which the latest budget should be retrieved
+     * @return the latest budget as a Double if it exists, or null if no budget is found
+     */
     public static Double getLatestBudget(int user_id, Date referenceDate) {
         try (Connection conn = ConnectDB.getConnection()) {
             String query = "SELECT budget FROM History " +

@@ -3,13 +3,20 @@ package com.ft.fin_track.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.springframework.beans.factory.annotation.Value;
 
 public class ConnectDB {
+    @Value("${SUPABASE_URL}")
+    static String url;
+
+    @Value("${SUPABASE_USER_IPV4}")
+    static String user;
+
+    @Value("${SUPABASE_PASSWORD}")
+    static String password;
+
     public static Connection getConnection() {
         Connection conn = null;
-        String url = System.getenv("POSTGRES_URL");
-        String user = System.getenv("POSTGRES_USER");
-        String password = System.getenv("POSTGRES_PASSWORD");
 
         try {
             conn = DriverManager.getConnection(url, user, password);

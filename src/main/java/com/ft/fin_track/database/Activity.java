@@ -2,7 +2,7 @@ package com.ft.fin_track.database;
 
 import java.sql.Timestamp;
 
-// Transaction activity --> named Activity to avoid confusion between SQL transctions
+// Transaction activity
 public class Activity {
     private Integer activity_id; // primary key, auto increment: null-->let db handle
     private final Timestamp entry_time;
