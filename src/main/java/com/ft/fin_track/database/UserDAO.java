@@ -43,7 +43,7 @@ public class UserDAO {
             conn.close();
             return true;
         } catch (SQLException e) {
-            System.out.println("Error adding user: " + e.getMessage());
+            System.out.println("Error deleting user: " + e.getMessage());
             return false;
         }
     }
@@ -67,7 +67,7 @@ public class UserDAO {
             conn.close();
             return true;
         } catch (SQLException e) {
-            System.out.println("Error adding user: " + e.getMessage());
+            System.out.println("Error updating user: " + e.getMessage());
             return false;
         }
     }

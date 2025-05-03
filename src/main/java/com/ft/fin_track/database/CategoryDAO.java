@@ -19,7 +19,7 @@ public class CategoryDAO {
             conn.close();
             return true;
         } catch (SQLException e) {
-            System.out.println("Error adding user: " + e.getMessage());
+            System.out.println("Error getting category: " + e.getMessage());
             return false;
         }
     }

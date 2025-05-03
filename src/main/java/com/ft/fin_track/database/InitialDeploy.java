@@ -35,7 +35,7 @@ public class InitialDeploy {
             conn.close();
             return true;
         } catch (SQLException e) {
-            System.out.println("Error adding user: " + e.getMessage());
+            System.out.println("Error creating user table: " + e.getMessage());
             return false;
         }
     }
@@ -54,7 +54,6 @@ public class InitialDeploy {
                     "activity_type CHAR(1) NOT NULL CHECK (activity_type IN ('D', 'W')), " +
                     "amount DECIMAL(10, 2) NOT NULL, " +
                     "description VARCHAR(255), " +
-                    "recur_days INT DEFAULT 0, " +
                     "FOREIGN KEY (user_id) REFERENCES Users(user_id)," +
                     "FOREIGN KEY (category_id) REFERENCES Category(category_id)" +
                     ")";
@@ -65,7 +64,7 @@ public class InitialDeploy {
             conn.close();
             return true;
         } catch (SQLException e) {
-            System.out.println("Error adding user: " + e.getMessage());
+            System.out.println("Error creating activity: " + e.getMessage());
             return false;
         }
     }
@@ -90,7 +89,35 @@ public class InitialDeploy {
             conn.close();
             return true;
         } catch (SQLException e) {
-            System.out.println("Error adding user: " + e.getMessage());
+            System.out.println("Error creating history table: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * create recurrence table
+     * @return true if success
+     */
+    public static boolean createRecurrenceTable() {
+        try (Connection conn = ConnectDB.getConnection()) {
+            String query = "CREATE TABLE Recurrence (" +
+                    "recurrence_id INT NOT NULL, " +
+                    "user_id INT NOT NULL, " +
+                    "activity_id INT NOT NULL, " +
+                    "interval_days INT NOT NULL, " +
+                    "last_change DATE NOT NULL, " +
+                    "PRIMARY KEY (recurrence_id), " +
+                    "FOREIGN KEY (user_id) REFERENCES Users(user_id), " +
+                    "FOREIGN KEY (activity_id) REFERENCES Activity(activity_id)" +
+                    ")";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.executeUpdate();
+
+            ps.close();
+            conn.close();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error creating recurrence table: " + e.getMessage());
             return false;
         }
     }
@@ -109,7 +136,7 @@ public class InitialDeploy {
             conn.close();
             return true;
         } catch (SQLException e) {
-            System.out.println("Error adding user: " + e.getMessage());
+            System.out.println("Error deleting user table: " + e.getMessage());
             return false;
         }
     }
@@ -128,7 +155,7 @@ public class InitialDeploy {
             conn.close();
             return true;
         } catch (SQLException e) {
-            System.out.println("Error adding user: " + e.getMessage());
+            System.out.println("Error deleting activity table: " + e.getMessage());
             return false;
         }
     }
@@ -147,7 +174,26 @@ public class InitialDeploy {
             conn.close();
             return true;
         } catch (SQLException e) {
-            System.out.println("Error adding user: " + e.getMessage());
+            System.out.println("Error deleting history table: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * delete recurrence table from database if exists
+     * @return true if success
+     */
+    public static boolean deleteRecurrenceTable() {
+        try (Connection conn = ConnectDB.getConnection()) {
+            String query = "DROP TABLE IF EXISTS Recurrence";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.executeUpdate();
+
+            ps.close();
+            conn.close();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error deleting recurrence table: " + e.getMessage());
             return false;
         }
     }

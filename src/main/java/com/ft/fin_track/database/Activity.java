@@ -11,10 +11,9 @@ public class Activity {
     private char activity_type; // 'W' for withdraw, 'D' for deposit
     private double amount;
     private String description;
-    private int recur_days;
 
     // blanket constructor for retrieving activity
-    public Activity(Integer activity_id, Timestamp entry_time, int user_id, int category_id, char activity_type, double amount, String description, int recur_days) {
+    public Activity(Integer activity_id, Timestamp entry_time, int user_id, int category_id, char activity_type, double amount, String description) {
         this.activity_id = activity_id;
         this.entry_time = entry_time;
         this.user_id = user_id;
@@ -22,20 +21,15 @@ public class Activity {
         this.activity_type = activity_type;
         this.amount = amount;
         this.description = description;
-        this.recur_days = recur_days;
     }
 
     // constructor for adding activity (no activity_id, entry_time --> not user modifiable values)
-    public Activity(int user_id, int category_id, char activity_type, double amount, String description, int recur_days) {
-        this(null, new Timestamp(System.currentTimeMillis()), user_id, category_id, activity_type, amount, description, recur_days);
+    public Activity(int user_id, int category_id, char activity_type, double amount, String description) {
+        this(null, new Timestamp(System.currentTimeMillis()), user_id, category_id, activity_type, amount, description);
     }
 
     public int getActivity_id() {
         return activity_id;
-    }
-
-    public void setActivity_id(int activity_id) {
-        this.activity_id = activity_id;
     }
 
     public Timestamp getEntryTime() {
@@ -76,13 +70,5 @@ public class Activity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getRecur_days() {
-        return recur_days;
-    }
-
-    public void setRecur_days(int recur_days) {
-        this.recur_days = recur_days;
     }
 }
