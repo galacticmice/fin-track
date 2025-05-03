@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class CategoryDAO {
     public static boolean getCategory(int category_id) {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "SELECT type, description FROM Category WHERE id = ?";
+            String query = "SELECT description FROM Category WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, category_id);
             ps.executeUpdate();

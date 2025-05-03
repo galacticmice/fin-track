@@ -8,12 +8,12 @@ public class Activity {
     private final Timestamp entry_time;
     private final int user_id;
     private int category_id;
-    private char activity_type; // 'W' for withdraw, 'D' for deposit
+    private boolean activity_type; // true for income, false for expense
     private double amount;
     private String description;
 
     // blanket constructor for retrieving activity
-    public Activity(Integer activity_id, Timestamp entry_time, int user_id, int category_id, char activity_type, double amount, String description) {
+    public Activity(Integer activity_id, Timestamp entry_time, int user_id, int category_id, boolean activity_type, double amount, String description) {
         this.activity_id = activity_id;
         this.entry_time = entry_time;
         this.user_id = user_id;
@@ -24,7 +24,7 @@ public class Activity {
     }
 
     // constructor for adding activity (no activity_id, entry_time --> not user modifiable values)
-    public Activity(int user_id, int category_id, char activity_type, double amount, String description) {
+    public Activity(int user_id, int category_id, boolean activity_type, double amount, String description) {
         this(null, new Timestamp(System.currentTimeMillis()), user_id, category_id, activity_type, amount, description);
     }
 
@@ -48,11 +48,11 @@ public class Activity {
         this.category_id = category_id;
     }
 
-    public char getActivity_type() {
+    public boolean getActivity_type() {
         return activity_type;
     }
 
-    public void setActivity_type(char activity_type) {
+    public void setActivity_type(boolean activity_type) {
         this.activity_type = activity_type;
     }
 

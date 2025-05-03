@@ -51,7 +51,7 @@ public class InitialDeploy {
                     "entry_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                     "user_id INT NOT NULL, " +
                     "category_id INT NOT NULL, " +
-                    "activity_type CHAR(1) NOT NULL CHECK (activity_type IN ('D', 'W')), " +
+                    "activity_type BOOLEAN NOT NULL, " +
                     "amount DECIMAL(10, 2) NOT NULL, " +
                     "description VARCHAR(255), " +
                     "FOREIGN KEY (user_id) REFERENCES Users(user_id)," +

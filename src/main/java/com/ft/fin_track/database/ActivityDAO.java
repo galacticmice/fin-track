@@ -12,7 +12,7 @@ public class ActivityDAO {
             ps.setTimestamp(1, activity.getEntryTime());
             ps.setInt(2, activity.getUser_id());
             ps.setInt(3, activity.getCategory_id());
-            ps.setString(4, String.valueOf(activity.getActivity_type()));
+            ps.setBoolean(4, activity.getActivity_type());
             ps.setDouble(5, activity.getAmount());
             ps.setString(6, activity.getDescription());
             ps.executeUpdate();
@@ -48,7 +48,7 @@ public class ActivityDAO {
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setTimestamp(1, updated_activity.getEntryTime());
             ps.setInt(2, updated_activity.getCategory_id());
-            ps.setString(3, String.valueOf(updated_activity.getActivity_type()));
+            ps.setBoolean(3, updated_activity.getActivity_type());
             ps.setDouble(4, updated_activity.getAmount());
             ps.setString(5, updated_activity.getDescription());
             ps.setInt(6, activity_id);
