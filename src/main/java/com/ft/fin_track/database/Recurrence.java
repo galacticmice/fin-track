@@ -3,7 +3,7 @@ package com.ft.fin_track.database;
 import java.sql.Date;
 
 public class Recurrence {
-    private final int recurrence_id; // primary key, auto increment: null-->let db handle
+    private final Integer recurrence_id; // primary key, auto increment: null-->let db handle
     private final int user_id;
     private final int activity_id; // id to get activity details from
     private final int interval_days; // number of days between recurrences

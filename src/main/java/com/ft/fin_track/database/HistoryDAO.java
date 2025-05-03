@@ -10,7 +10,7 @@ public class HistoryDAO {
      */
     public static boolean insertOrUpdateHistory(History history) {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "INSERT INTO History (user_id, month_year, budget) " +
+            String query = "INSERT INTO \"History\" (user_id, month_year, budget) " +
                     "VALUES (?, ?, ?) " +
                     "ON CONFLICT (user_id, month_year) DO UPDATE SET budget = ?";
 
@@ -40,7 +40,7 @@ public class HistoryDAO {
      */
     public static Double getLatestBudget(int user_id, Date referenceDate) {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "SELECT budget FROM History " +
+            String query = "SELECT budget FROM \"History\" " +
                     "WHERE user_id = ? AND month_year <= ? " +
                     "ORDER BY month_year DESC " +
                     "LIMIT 1";

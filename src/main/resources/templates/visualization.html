@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizations - Financial Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/dashboard">Financial Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recurrences">Recurring Activities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/visualization">Visualizations</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 pt-3">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h2>Financial Visualizations</h2>
+                <p class="text-muted">View your financial data in graphical format</p>
+            </div>
+            <div class="col-md-6 text-end">
+                <a href="/dashboard" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Monthly Income/Expense Chart -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Monthly Income vs Expenses (Last 12 Months)</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="monthlyChart" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- Balance Trend Chart -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Balance Trend (Last 12 Months)</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="balanceChart" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- Expense Categories Pie Chart -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Current Month Expense Breakdown by Category</h5>
+            </div>
+            <div class="card-body">
+                <div th:if="${#lists.isEmpty(categoryData)}">
+                    <p class="text-center">No expense data available for the current month</p>
+                </div>
+                <div th:unless="${#lists.isEmpty(categoryData)}">
+                    <canvas id="categoryChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:inline="javascript">
+        // Get data from Thymeleaf
+        const labels = /*[[${labels}]]*/ [];
+        const incomeData = /*[[${incomeData}]]*/ [];
+        const expenseData = /*[[${expenseData}]]*/ [];
+        const balanceData = /*[[${balanceData}]]*/ [];
+        const categoryLabels = /*[[${categoryLabels}]]*/ [];
+        const categoryData = /*[[${categoryData}]]*/ [];
+
+        // Monthly Income vs Expenses Chart
+        const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(monthlyCtx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Income',
+                        data: incomeData,
+                        backgroundColor: 'rgba(40, 167, 69, 0.7)',
+                        borderColor: 'rgba(40, 167, 69, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Expenses',
+                        data: expenseData,
+                        backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Amount ($)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Balance Trend Chart
+        const balanceCtx = document.getElementById('balanceChart').getContext('2d');
+        new Chart(balanceCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Monthly Balance',
+                    data: balanceData,
+                    fill: false,
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    tension: 0.1,
+                    pointBackgroundColor: balanceData.map(value => 
+                        value >= 0 ? 'rgba(40, 167, 69, 1)' : 'rgba(220, 53, 69, 1)'
+                    ),
+                    pointBorderColor: balanceData.map(value => 
+                        value >= 0 ? 'rgba(40, 167, 69, 1)' : 'rgba(220, 53, 69, 1)'
+                    )
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Balance ($)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Category Pie Chart
+        if (categoryLabels.length > 0) {
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(categoryCtx, {
+                type: 'pie',
+                data: {
+                    labels: categoryLabels,
+                    datasets: [{
+                        data: categoryData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(199, 199, 199, 0.7)',
+                            'rgba(83, 102, 255, 0.7)',
+                            'rgba(40, 167, 69, 0.7)',
+                            'rgba(220, 53, 69, 0.7)',
+                            'rgba(255, 128, 0, 0.7)',
+                            'rgba(0, 128, 128, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(199, 199, 199, 1)',
+                            'rgba(83, 102, 255, 1)',
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(220, 53, 69, 1)',
+                            'rgba(255, 128, 0, 1)',
+                            'rgba(0, 128, 128, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: $${value.toFixed(2)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

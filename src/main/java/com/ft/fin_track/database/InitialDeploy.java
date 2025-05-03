@@ -1,18 +1,67 @@
 package com.ft.fin_track.database;
 
 import java.sql.*;
+import java.util.Arrays;
 
 /// used only for initial deployment of server
 /// DO NOT USE IN PRODUCTION
 public class InitialDeploy {
 
-    public static void startFresh() {
-        deleteUserTable();
-        deleteActivityTable();
-        deleteHistoryTable();
-        createUserTable();
-        createActivityTable();
-        createHistoryTable();
+    /**
+     * create category table
+     * @return true if success
+     */
+    public static boolean createCategoryTable() {
+        try (Connection conn = ConnectDB.getConnection()) {
+            String query = "CREATE TABLE \"Category\" (" +
+                    "category_id SERIAL PRIMARY KEY, " +
+                    "description VARCHAR(50) NOT NULL" +
+                    ")";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.executeUpdate();
+
+            // Initialize with default categories
+            String[] defaultCategories = {
+                "Housing", "Transportation", "Food", "Utilities", 
+                "Insurance", "Medical", "Savings", "Personal", 
+                "Entertainment", "Clothing", "Education", "Gifts/Donations",
+                "Salary", "Investment", "Other Income", "Other Expense"
+            };
+
+            for (String category : defaultCategories) {
+                String insertQuery = "INSERT INTO \"Category\" (description) VALUES (?)";
+                PreparedStatement insertPs = conn.prepareStatement(insertQuery);
+                insertPs.setString(1, category);
+                insertPs.executeUpdate();
+                insertPs.close();
+            }
+
+            ps.close();
+            conn.close();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error creating category table: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * delete category table from database if exists
+     * @return true if success
+     */
+    public static boolean deleteCategoryTable() {
+        try (Connection conn = ConnectDB.getConnection()) {
+            String query = "DROP TABLE IF EXISTS \"Category\"";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.executeUpdate();
+
+            ps.close();
+            conn.close();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error deleting category table: " + e.getMessage());
+            return false;
+        }
     }
 
     /**
@@ -21,7 +70,7 @@ public class InitialDeploy {
      */
     public static boolean createUserTable() {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "CREATE TABLE Users (" +
+            String query = "CREATE TABLE \"Users\" (" +
                     "user_id SERIAL PRIMARY KEY, " +
                     "username VARCHAR(20) NOT NULL, " +
                     "email VARCHAR(255) NOT NULL UNIQUE, " +
@@ -46,7 +95,7 @@ public class InitialDeploy {
      */
     public static boolean createActivityTable() {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "CREATE TABLE Activity (" +
+            String query = "CREATE TABLE \"Activity\" (" +
                     "activity_id SERIAL PRIMARY KEY, " +
                     "entry_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                     "user_id INT NOT NULL, " +
@@ -75,12 +124,12 @@ public class InitialDeploy {
      */
     public static boolean createHistoryTable() {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "CREATE TABLE History (" +
+            String query = "CREATE TABLE \"History\" (" +
                     "user_id INT NOT NULL, " +
                     "month_year DATE NOT NULL, " +
                     "budget DECIMAL(10, 2) NOT NULL, " +
                     "PRIMARY KEY (user_id, month_year), " +
-                    "FOREIGN KEY (user_id) REFERENCES Users(user_id)" +
+                    "FOREIGN KEY (user_id) REFERENCES \"Users\"(user_id)" +
                     ")";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.executeUpdate();
@@ -100,15 +149,15 @@ public class InitialDeploy {
      */
     public static boolean createRecurrenceTable() {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "CREATE TABLE Recurrence (" +
+            String query = "CREATE TABLE \"Recurrence\" (" +
                     "recurrence_id INT NOT NULL, " +
                     "user_id INT NOT NULL, " +
                     "activity_id INT NOT NULL, " +
                     "interval_days INT NOT NULL, " +
                     "last_change DATE NOT NULL, " +
                     "PRIMARY KEY (recurrence_id), " +
-                    "FOREIGN KEY (user_id) REFERENCES Users(user_id), " +
-                    "FOREIGN KEY (activity_id) REFERENCES Activity(activity_id)" +
+                    "FOREIGN KEY (user_id) REFERENCES \"Users\"(user_id), " +
+                    "FOREIGN KEY (activity_id) REFERENCES \"Activity\"(activity_id)" +
                     ")";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.executeUpdate();
@@ -128,7 +177,7 @@ public class InitialDeploy {
      */
     public static boolean deleteUserTable() {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "DROP TABLE IF EXISTS Users";
+            String query = "DROP TABLE IF EXISTS \"Users\"";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.executeUpdate();
 
@@ -147,7 +196,7 @@ public class InitialDeploy {
      */
     public static boolean deleteActivityTable() {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "DROP TABLE IF EXISTS Activity";
+            String query = "DROP TABLE IF EXISTS \"Activity\"";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.executeUpdate();
 
@@ -166,7 +215,7 @@ public class InitialDeploy {
      */
     public static boolean deleteHistoryTable() {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "DROP TABLE IF EXISTS History";
+            String query = "DROP TABLE IF EXISTS \"History\"";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.executeUpdate();
 
@@ -185,7 +234,7 @@ public class InitialDeploy {
      */
     public static boolean deleteRecurrenceTable() {
         try (Connection conn = ConnectDB.getConnection()) {
-            String query = "DROP TABLE IF EXISTS Recurrence";
+            String query = "DROP TABLE IF EXISTS \"Recurrence\"";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.executeUpdate();
 
