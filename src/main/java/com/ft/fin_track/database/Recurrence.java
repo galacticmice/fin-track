@@ -1,7 +1,6 @@
 package com.ft.fin_track.database;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 public class Recurrence {
     private final int recurrence_id; // primary key, auto increment: null-->let db handle
