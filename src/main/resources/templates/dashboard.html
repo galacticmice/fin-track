@@ -203,7 +203,7 @@
                             </tr>
                             <tr th:each="activity : ${activities}" class="activity-item">
                                 <td th:text="${#dates.format(activity.entryTime, 'MMM dd, yyyy')}">Jan 01, 2023</td>
-                                <td th:text="${T(org.sjsu.database.CategoryDAO).getCategory(activity.category_id).description}">Category</td>
+                                <td th:text="${T(com.ft.fin_track.database.CategoryDAO).getCategory(activity.category_id).description}">Category</td>
                                 <td th:text="${activity.description}">Description</td>
                                 <td th:class="${activity.activity_type ? 'text-success' : 'text-danger'}">
                                     <span th:text="${activity.activity_type ? '+' : '-'}"></span>
