@@ -83,14 +83,33 @@
                     </div>
                     <div class="col-auto">
                         <select name="year" class="form-select" id="yearSelect">
-                            <option th:each="year : ${#numbers.sequence(2020, 2030)}" 
-                                    th:value="${year}" 
+                            <option th:each="year : ${#numbers.sequence(2020, 2030)}"
+                                    th:value="${year}"
                                     th:text="${year}"
                                     th:selected="${year == currentYear}"></option>
                         </select>
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-primary">Filter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Date Range Filter -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <form action="/activity/filter" method="get" class="row g-3">
+                    <div class="col-auto">
+                        <label for="startDate" class="form-label">Start Date</label>
+                        <input type="date" name="startDate" id="startDate" class="form-control" required>
+                    </div>
+                    <div class="col-auto">
+                        <label for="endDate" class="form-label">End Date</label>
+                        <input type="date" name="endDate" id="endDate" class="form-control" required>
+                    </div>
+                    <div class="col-auto align-self-end">
+                        <button type="submit" class="btn btn-outline-primary">Filter by Date</button>
                     </div>
                 </form>
             </div>
@@ -106,17 +125,17 @@
                     <div class="card-body budget-progress">
                         <h2 class="text-center mb-3">$<span th:text="${budget != null ? #numbers.formatDecimal(budget, 0, 'COMMA', 2, 'POINT') : '0.00'}">0.00</span></h2>
                         <div class="progress mb-3">
-                            <div class="progress-bar" role="progressbar" 
-                                 th:style="'width: ' + ${budgetPercentage != null ? budgetPercentage : 0} + '%'" 
+                            <div class="progress-bar" role="progressbar"
+                                 th:style="'width: ' + ${budgetPercentage != null ? budgetPercentage : 0} + '%'"
                                  th:classappend="${budgetPercentage != null && budgetPercentage > 90 ? 'bg-danger' : (budgetPercentage != null && budgetPercentage > 75 ? 'bg-warning' : 'bg-success')}"
-                                 th:aria-valuenow="${budgetPercentage != null ? budgetPercentage : 0}" 
-                                 aria-valuemin="0" 
+                                 th:aria-valuenow="${budgetPercentage != null ? budgetPercentage : 0}"
+                                 aria-valuemin="0"
                                  aria-valuemax="100">
                                 <span th:text="${budgetPercentage != null ? #numbers.formatDecimal(budgetPercentage, 0, 0) : '0'}">0</span>%
                             </div>
                         </div>
                         <p class="text-center">
-                            <span th:text="${budgetRemaining != null && budgetRemaining < 0 ? 'Over budget by' : 'Remaining'}">Remaining</span>: 
+                            <span th:text="${budgetRemaining != null && budgetRemaining < 0 ? 'Over budget by' : 'Remaining'}">Remaining</span>:
                             $<span th:text="${budgetRemaining != null ? #numbers.formatDecimal((budgetRemaining < 0 ? -budgetRemaining : budgetRemaining), 0, 'COMMA', 2, 'POINT') : '0.00'}">0.00</span>
                         </p>
                     </div>
@@ -189,34 +208,49 @@
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
                         <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Category</th>
-                                <th>Description</th>
-                                <th>Amount</th>
-                                <th>Actions</th>
-                            </tr>
+                        <tr>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr th:if="${#lists.isEmpty(activities)}">
-                                <td colspan="5" class="text-center">No activities found</td>
-                            </tr>
-                            <tr th:each="activity : ${activities}" class="activity-item">
-                                <td th:text="${#dates.format(activity.entryTime, 'MMM dd, yyyy')}">Jan 01, 2023</td>
-                                <td th:text="${T(com.ft.fin_track.database.CategoryDAO).getCategory(activity.category_id).description}">Category</td>
-                                <td th:text="${activity.description}">Description</td>
-                                <td th:class="${activity.activity_type ? 'text-success' : 'text-danger'}">
-                                    <span th:text="${activity.activity_type ? '+' : '-'}"></span>
-                                    $<span th:text="${activity.amount != null ? #numbers.formatDecimal(activity.amount, 0, 'COMMA', 2, 'POINT') : '0.00'}">0.00</span>
-                                </td>
-                                <td>
-                                    <form th:action="@{/activity/delete/{id}(id=${activity.activity_id})}" method="post" style="display: inline;">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
+                        <tr th:if="${#lists.isEmpty(activities)}">
+                            <td colspan="5" class="text-center">No activities found</td>
+                        </tr>
+                        <tr th:each="activity : ${activities}" class="activity-item">
+                            <td th:text="${#dates.format(activity.entryTime, 'MMM dd, yyyy')}">Jan 01, 2023</td>
+                            <td th:text="${T(com.ft.fin_track.database.CategoryDAO).getCategory(activity.category_id).description}">Category</td>
+                            <td th:text="${activity.description}">Description</td>
+                            <td th:class="${activity.activity_type ? 'text-success' : 'text-danger'}">
+                                <span th:text="${activity.activity_type ? '+' : '-'}"></span>
+                                $<span th:text="${activity.amount != null ? #numbers.formatDecimal(activity.amount, 0, 'COMMA', 2, 'POINT') : '0.00'}">0.00</span>
+                            </td>
+                            <td>
+                                <button
+                                        type="button"
+                                        class="btn btn-sm btn-outline-primary me-1"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editActivityModal"
+                                        th:data-id="${activity.activity_id}"
+                                        th:data-amount="${activity.amount}"
+                                        th:data-description="${activity.description}"
+                                        th:data-category="${activity.category_id}"
+                                        th:data-type="${activity.activity_type}">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+
+
+                                <!-- Delete Button (inside form) -->
+                                <form th:action="@{/activity/delete/{id}(id=${activity.activity_id})}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -244,8 +278,8 @@
                         <div class="mb-3">
                             <label for="categoryId" class="form-label">Category</label>
                             <select class="form-select" id="categoryId" name="categoryId" required>
-                                <option th:each="category : ${categories}" 
-                                        th:value="${category.category_id}" 
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.category_id}"
                                         th:text="${category.description}">Category</option>
                             </select>
                         </div>
@@ -278,6 +312,51 @@
         </div>
     </div>
 
+    <!-- Edit Activity Modal -->
+    <div class="modal fade" id="editActivityModal" tabindex="-1" aria-labelledby="editActivityModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" th:action="@{/activity/update}" id="editActivityForm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editActivityModalLabel">Edit Activity</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="activity_id" id="editActivityId" />
+                        <div class="mb-3">
+                            <label class="form-label">Activity Type</label>
+                            <select class="form-select" name="activityType" id="editActivityType" required>
+                                <option value="true">Income</option>
+                                <option value="false">Expense</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" name="categoryId" id="editCategoryId" required>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.category_id}"
+                                        th:text="${category.description}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Amount</label>
+                            <input type="number" step="0.01" min="0.01" class="form-control" name="amount" id="editAmount" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <input type="text" class="form-control" name="description" id="editDescription" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Set Budget Modal -->
     <div class="modal fade" id="setBudgetModal" tabindex="-1" aria-labelledby="setBudgetModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -292,7 +371,7 @@
                             <label for="budget" class="form-label">Monthly Budget Amount</label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                <input type="number" class="form-control" id="budget" name="budget" step="0.01" min="0" 
+                                <input type="number" class="form-control" id="budget" name="budget" step="0.01" min="0"
                                        th:value="${budget}" required>
                             </div>
                         </div>
@@ -319,6 +398,25 @@
                 const activityType = this.getAttribute('data-activity-type');
                 document.getElementById('activityType').value = activityType;
             });
+        });
+    </script>
+
+    <script>
+        // Fill edit modal with activity data
+        const editModal = document.getElementById('editActivityModal');
+        editModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
+            const amount = button.getAttribute('data-amount');
+            const description = button.getAttribute('data-description');
+            const category = button.getAttribute('data-category');
+            const type = button.getAttribute('data-type');
+
+            document.getElementById('editActivityId').value = id;
+            document.getElementById('editAmount').value = amount;
+            document.getElementById('editDescription').value = description;
+            document.getElementById('editCategoryId').value = category;
+            document.getElementById('editActivityType').value = type;
         });
     </script>
 </body>

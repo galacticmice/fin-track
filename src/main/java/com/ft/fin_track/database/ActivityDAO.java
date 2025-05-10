@@ -21,13 +21,13 @@ public class ActivityDAO {
 
             if (rs.next()) {
                 Activity activity = new Activity(
-                    rs.getInt("activity_id"),
-                    rs.getTimestamp("entry_time"),
-                    rs.getInt("user_id"),
-                    rs.getInt("category_id"),
-                    rs.getBoolean("activity_type"),
-                    rs.getDouble("amount"),
-                    rs.getString("description")
+                        rs.getInt("activity_id"),
+                        rs.getTimestamp("entry_time"),
+                        rs.getInt("user_id"),
+                        rs.getInt("category_id"),
+                        rs.getBoolean("activity_type"),
+                        rs.getDouble("amount"),
+                        rs.getString("description")
                 );
                 rs.close();
                 ps.close();
@@ -81,7 +81,7 @@ public class ActivityDAO {
      * @param endDate the end date (exclusive)
      * @return a list of Activity objects
      */
-    private static List<Activity> getActivitiesForDateRange(int user_id, Date startDate, Date endDate) {
+    public static List<Activity> getActivitiesForDateRange(int user_id, Date startDate, Date endDate) {
         List<Activity> activities = new ArrayList<>();
 
         try (Connection conn = ConnectDB.getConnection()) {
@@ -94,13 +94,13 @@ public class ActivityDAO {
 
             while (rs.next()) {
                 Activity activity = new Activity(
-                    rs.getInt("activity_id"),
-                    rs.getTimestamp("entry_time"),
-                    rs.getInt("user_id"),
-                    rs.getInt("category_id"),
-                    rs.getBoolean("activity_type"),
-                    rs.getDouble("amount"),
-                    rs.getString("description")
+                        rs.getInt("activity_id"),
+                        rs.getTimestamp("entry_time"),
+                        rs.getInt("user_id"),
+                        rs.getInt("category_id"),
+                        rs.getBoolean("activity_type"),
+                        rs.getDouble("amount"),
+                        rs.getString("description")
                 );
                 activities.add(activity);
             }
@@ -132,8 +132,8 @@ public class ActivityDAO {
 
         try (Connection conn = ConnectDB.getConnection()) {
             String query = "SELECT activity_type, SUM(amount) as \"total\" FROM \"Activity\" " +
-                           "WHERE user_id = ? AND entry_time >= ? AND entry_time < ? " +
-                           "GROUP BY activity_type";
+                    "WHERE user_id = ? AND entry_time >= ? AND entry_time < ? " +
+                    "GROUP BY activity_type";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, user_id);
             ps.setDate(2, sqlFirstDay);
